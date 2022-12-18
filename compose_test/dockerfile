@@ -1,0 +1,23 @@
+FROM ubuntu:22.04
+COPY src/ /opt/src
+WORKDIR /opt/src
+# COPY requirements.txt requirements.txt
+RUN apt-get update && apt install vim wget  zip -y&&apt install inetutils-ping -y && apt install telnet -y
+# SHELL ["/bin/bash", "--login", "-c"]
+RUN wget --quiet https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh  -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p ~/conda && \
+    rm ~/miniconda.sh && \
+    ~/conda/bin/conda clean -tipsy
+ENV PATH ~/conda/bin:$PATH
+RUN ln -s /root/conda/bin/python /usr/bin/python
+RUN ln -s /root/conda/bin/pip /usr/bin/pip
+RUN ln -s /root/conda/condabin/conda /usr/bin/conda
+RUN /usr/bin/python --version
+RUN  pip install    -r requirements.txt  --no-cache-dir  -i https://mirrors.aliyun.com/pypi/simple &&\
+    conda clean -y --all && \
+    rm -rf ~/.cache
+ENV LANG C.UTF-8
+# CMD ["sleep", "10000"]
+# RUN touch start.sh && chmod 755 start.sh && echo "python app.py" > start.sh
+# CMD ["./start.sh"]
+CMD ["python", "app.py"]

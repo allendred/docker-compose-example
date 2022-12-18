@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: ../
+    ports:
+      - "7700:7700"
+    volumes:
+      - ../src:/opt/src
+  redis:
+    image: "redis:3.0.7"
